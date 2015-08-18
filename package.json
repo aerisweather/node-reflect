@@ -1,0 +1,31 @@
+{
+  "name": "node-reflect-copy",
+  "version": "0.0.1",
+  "description": "A verified copy for Node.js, available across filesystems and networks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerisweather/node-reflect-copy.git"
+  },
+  "keywords": [
+    "copy",
+    "checksum",
+    "hash",
+    "reliable",
+    "fs"
+  ],
+  "author": "Seth Miller <smiller@aerisweather.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aerisweather/node-reflect-copy/issues"
+  },
+  "homepage": "https://github.com/aerisweather/node-reflect-copy#readme",
+  "dependencies": {
+    "async": "^1.4.2",
+    "fs-extra": "^0.23.1",
+    "lockfile": "^1.0.1"
+  }
+}
