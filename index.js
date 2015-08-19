@@ -10,7 +10,8 @@ function copy(source, destination, options, callback) {
 		callback = options;
 		options = {}
 	} else if (typeof options === 'function' || options instanceof RegExp) {
-		options = {filter: options}
+		//options = {filter: options}
+		callback(new Error('This form of copy does not support multiple files yet...'));
 	}
 	options = getCopyOptions(options);
 	callback = callback || function () {
@@ -42,7 +43,7 @@ function copy(source, destination, options, callback) {
 			},
 			function (callback) {
 				//Lock file for copying, make sure no one else interrupts us.
-				if(options.useLock) {
+				if (options.useLock) {
 					var lockFilePath = options.destination + '.copy-lock';
 					var lockFileOpts = {
 						wait:  options.wait,
@@ -75,8 +76,11 @@ function copy(source, destination, options, callback) {
 			},
 			function (sourceFileHash, callback) {
 				//Move into final position
-				fsExtra.move(options.tmpDestination, options.destination, function (err) {
+				fsExtra.move(options.tmpDestination, options.destination, {clobber: options.clobber}, function (err) {
 					if (err) {
+						if(err.code === 'EEXIST') {
+							err.message = 'File already exists at ' + options.destination + ' (EEXIST) and the option \'clobber\' was set to false';
+						}
 						return callback(err);
 					}
 					return callback(null, sourceFileHash);
@@ -95,7 +99,7 @@ function copy(source, destination, options, callback) {
 				});
 			},
 			function (sourceFileHash, dstFileHash, callback) {
-				if(options.useLock) {
+				if (options.useLock) {
 					//Remove our lock, we are done!
 					var lockFilePath = options.destination + '.copy-lock';
 					lockFile.unlock(lockFilePath, function (err) {
@@ -120,11 +124,12 @@ function copy(source, destination, options, callback) {
 
 function getCopyOptions(options) {
 	var resultOpts = {};
+	resultOpts.clobber = (options.clobber !== undefined) ? options.clobber : false;
 	resultOpts.hash = options.hash || 'md5';
-	resultOpts.tmpSuffix = options.tmpSuffix || '.copy-tmp';
-	resultOpts.wait = options.wait || 10000; //in ms
 	resultOpts.stale = options.stale || 30000; //in ms
+	resultOpts.tmpSuffix = options.tmpSuffix || '.copy-tmp';
 	resultOpts.useLock = (options.useLock !== undefined) ? options.useLock : true;
+	resultOpts.wait = options.wait || 10000; //in ms
 	return resultOpts;
 }
 

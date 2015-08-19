@@ -43,6 +43,40 @@ describe('copy', function() {
 			done();
 		});
 	});
+
+	it('should NOT copy over an existing file (clobber off)', function(done) {
+		fsExtra.copySync(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'));
+
+		reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), function(err, result) {
+			if(err) {
+				assert.equal(err.code, 'EEXIST');
+				return done();
+			}
+			assert.ok(false, "Didn't throw EEXIST error when trying to clobber a file!");
+		});
+	});
+
+	it('should copy over an existing file (clobber on)', function(done) {
+		fsExtra.copySync(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'));
+
+		reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {clobber: true}, function(err, result) {
+			if(err) {
+				assert.ok(false, err.message);
+			}
+			fileExistsSync(path.join(resultDir, 'loon.jpg'));
+			done();
+		});
+	});
+
+	it('should copy the file to a non-existent folder without a lock', function(done) {
+		reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {useLock: false}, function(err, result) {
+			if(err) {
+				assert.ok(false, err.message);
+			}
+			fileExistsSync(path.join(resultDir, 'loon.jpg'));
+			done();
+		});
+	});
 });
 
 function fileExistsSync(filePath) {
