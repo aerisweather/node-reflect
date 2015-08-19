@@ -29,6 +29,8 @@
     "lockfile": "^1.0.1"
   },
   "devDependencies": {
-    "mocha": "^2.1.0"
+    "coveralls": "^2.11.2",
+    "mocha": "^2.1.0",
+    "mocha-lcov-reporter": "0.0.2"
   }
 }

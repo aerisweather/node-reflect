@@ -1,6 +1,11 @@
 # reflect-copy
 ===================
 
+Master Build Status: 
+[![Build Status](https://travis-ci.org/aerisweather/node-reflect-copy.svg?branch=master)](https://travis-ci.org/aerisweather/node-reflect-copy)
+[![Coverage Status](https://coveralls.io/repos/aerisweather/node-reflect-copy/badge.svg?branch=master&service=github)](https://coveralls.io/github/aerisweather/node-reflect-copy?branch=master)
+
+
 A verified copy for Node.js, available across filesystems and networks.
 
 We needed a nice copy to clone files across file systems. File operations should be verifiable yet simple. Using checksums
