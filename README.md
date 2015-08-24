@@ -29,11 +29,12 @@ We needed a nice copy to clone files across file systems. File operations should
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
 | `clobber` | (boolean) | `false` | Whether to overwrite if this file exists. |
-| `hash` | (string) | `'md5'` | Which hash to use for the checksum: 'md5' or 'sha1' |
-| `stale` | (int, ms) | `30000` | Duration to wait for the lock file before it is deemed stale (in milliseconds) |
+| `srcHash` | (string) | `(empty)` | The known hash of the source file, if known |
+| `hashMethod` | (string) | `'md5'` | Which hash to use for the checksum: 'md5' or 'sha1' |
 | `tmpSuffix` | (string) | `'.copy-tmp'` | Whether to overwrite if this file exists. |
-| `useLock` | (boolean) | `true` | Should we use lock files to ensure we are the only reflect-copy writing to this location. |
-| `wait` | (int, ms) | `10000` | How long to wait for a lock file before erroring (in milliseconds) |
+| `useLock` | (boolean) | `true` | (Locking) Should we use lock files to ensure we are the only reflect-copy writing to this location. |
+| `stale` | (int, ms) | `30000` | (Locking) Duration to wait for the lock file before it is deemed stale (in milliseconds) |
+| `wait` | (int, ms) | `10000` | (Locking) How long to wait for a lock file before erroring (in milliseconds) |
 
 ## Roadmap
 

@@ -23,6 +23,28 @@ describe('copy', function() {
 		})
 	});
 
+    it('should copy the file using sha1 as a checksum', function(done) {
+        fsExtra.ensureDirSync(resultDir);
+        reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {hashMethod: 'sha1'}, function(err, result) {
+            if(err) {
+                assert.ok(false, err.message);
+            }
+            fileExistsSync(path.join(resultDir, 'loon.jpg'));
+            done();
+        })
+    });
+
+    it('should error because bad hash specified', function(done) {
+        fsExtra.ensureDirSync(resultDir);
+        reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {hashMethod: 'nope'}, function(err, result) {
+            if(err) {
+                assert.equal(err.code, 'BADHASH');
+                return done();
+            }
+            assert.ok(false, "Didn't throw DIFF error when using a known hash.");
+        })
+    });
+
 	it('should copy the file to an existing folder, no filename', function(done) {
 		fsExtra.ensureDirSync(resultDir);
 		reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), resultDir, function(err, result) {
@@ -77,6 +99,26 @@ describe('copy', function() {
 			done();
 		});
 	});
+
+    it('should copy use a known hash and compare after copy', function(done) {
+        reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {srcHash: "a6921e11627e0c995546086e7865eacb"}, function(err, result) {
+            if(err) {
+                assert.ok(false, err.message);
+            }
+            fileExistsSync(path.join(resultDir, 'loon.jpg'));
+            done();
+        });
+    });
+
+    it('should copy use a known hash and compare after copy and fail', function(done) {
+        reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {srcHash: "abc123"}, function(err, result) {
+            if(err) {
+                assert.equal(err.code, 'DIFF');
+                return done();
+            }
+            assert.ok(false, "Didn't throw DIFF error when using a known hash.");
+        });
+    });
 });
 
 function fileExistsSync(filePath) {

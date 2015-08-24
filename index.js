@@ -62,7 +62,12 @@ function copy(source, destination, options, callback) {
 			},
 			function (callback) {
 				//Get the source hash
-				getFileHash(source, options.hash, callback);
+                if(!options.srcHash) {
+                    getFileHash(source, options.hashMethod, callback);
+                }
+                else {
+                    callback(null, options.srcHash);
+                }
 			},
 			function (sourceFileHash, callback) {
 				//Copy to temp location
@@ -88,12 +93,14 @@ function copy(source, destination, options, callback) {
 			},
 			function (sourceFileHash, callback) {
 				//Verify hash
-				getFileHash(options.destination, options.hash, function (err, dstFileHash) {
+				getFileHash(options.destination, options.hashMethod, function (err, dstFileHash) {
 					if (err) {
 						return callback(err);
 					}
 					if (dstFileHash != sourceFileHash) {
-						return callback(new Error("Copied file hashes don't match. Source: " + sourceFileHash + ", Destination: " + dstFileHash));
+                        var diffError = new Error("Copied file hashes don't match. Source: " + sourceFileHash + ", Destination: " + dstFileHash);
+                        diffError.code = "DIFF";
+						return callback(diffError);
 					}
 					return callback(null, sourceFileHash, dstFileHash);
 				});
@@ -124,21 +131,27 @@ function copy(source, destination, options, callback) {
 
 function getCopyOptions(options) {
 	var resultOpts = {};
+    //Overwrite
 	resultOpts.clobber = (options.clobber !== undefined) ? options.clobber : false;
-	resultOpts.hash = options.hash || 'md5';
-	resultOpts.stale = options.stale || 30000; //in ms
+
+    resultOpts.srcHash = options.srcHash;
+	resultOpts.hashMethod = options.hashMethod || 'md5';
+
 	resultOpts.tmpSuffix = options.tmpSuffix || '.copy-tmp';
 	resultOpts.useLock = (options.useLock !== undefined) ? options.useLock : true;
+
+    resultOpts.stale = options.stale || 30000; //in ms
 	resultOpts.wait = options.wait || 10000; //in ms
 	return resultOpts;
 }
 
-function getFileHash(path, hash, callback) {
+function getFileHash(path, hashMethod, callback) {
 	try {
-		var cryptoHash = crypto.createHash(hash);
+		var cryptoHash = crypto.createHash(hashMethod);
 	}
 	catch (err) {
-		//Hash not supported
+		//hashMethod not supported
+        err.code = "BADHASH";
 		return callback(err);
 	}
 	var hashHex = '';
