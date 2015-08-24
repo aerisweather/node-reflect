@@ -1,5 +1,5 @@
 {
-  "name": "node-reflect-copy",
+  "name": "reflect-copy",
   "version": "0.1.0",
   "description": "A verified copy for Node.js, available across filesystems and networks.",
   "main": "index.js",
