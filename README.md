@@ -6,7 +6,7 @@ Master Build Status:
 [![Build Status](https://travis-ci.org/aerisweather/node-reflect-copy.svg?branch=master)](https://travis-ci.org/aerisweather/node-reflect-copy)
 [![Coverage Status](https://coveralls.io/repos/aerisweather/node-reflect-copy/badge.svg?branch=master&service=github)](https://coveralls.io/github/aerisweather/node-reflect-copy?branch=master)
 
-This project is sponsored by:
+__This project is sponsored by:__
 
 [![AerisWeather](http://branding.aerisweather.com/logo-dark-small.png)](http://www.aerisweather.com) - Empowering the next generation, [aerisweather.com](https://www.aerisweather.com)
 
