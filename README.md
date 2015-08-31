@@ -1,6 +1,6 @@
 reflect-copy
 ===================
-A verified copy for Node.js, available across filesystems and networks.
+A verified copy for Node.js, available across filesystems and networks. It even works for directories.
 
 Master Build Status: 
 [![Build Status](https://travis-ci.org/aerisweather/node-reflect-copy.svg?branch=master)](https://travis-ci.org/aerisweather/node-reflect-copy)
@@ -9,6 +9,10 @@ Master Build Status:
 __This project is sponsored by:__
 
 [![AerisWeather](http://branding.aerisweather.com/logo-dark-small.png)](http://www.aerisweather.com) - Empowering the next generation, [aerisweather.com](https://www.aerisweather.com)
+
+Our use case deals with a mounted remote file system. We need a way to reliably copy things across the network. Since the remote 
+is just a folder, we have limited capabilities, so we read in the file(s), get a hash of them, copy them over, then verify our copy
+produces the same hash. Not fool proof, but pretty good at ensuring there weren't network hiccups along the way.
 
 ## Quick Example
 

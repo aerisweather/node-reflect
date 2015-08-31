@@ -4,13 +4,19 @@ var assert = require('assert'),
 	reflectCopy = require('../index');
 
 var fixturesDir = path.join(__dirname, 'fixtures');
-var resultDir = path.join(__dirname, 'dest')
+var multipleDir = path.join(__dirname, 'fixtures', 'my-dir');
+var resultDir = path.join(__dirname, 'dest');
 describe('copy', function() {
 
 	beforeEach(function() {
 		// runs before each test in this block
 		fsExtra.removeSync(resultDir);
 	});
+
+    afterEach(function() {
+        // runs before each test in this block
+        fsExtra.removeSync(resultDir);
+    });
 
 	it('should copy the file to an existing folder', function(done) {
 		fsExtra.ensureDirSync(resultDir);
@@ -117,6 +123,29 @@ describe('copy', function() {
                 return done();
             }
             assert.ok(false, "Didn't throw DIFF error when using a known hash.");
+        });
+    });
+
+    it('should copy a directory to an existing folder', function(done) {
+        fsExtra.ensureDirSync(resultDir);
+        reflectCopy.copy(multipleDir, resultDir, function(err, result) {
+            if(err) {
+                assert.ok(false, err.message);
+            }
+            fileExistsSync(path.join(resultDir, 'my-dir', 'loon.jpg'));
+            fileExistsSync(path.join(resultDir, 'my-dir', 'world-test.txt'));
+            done();
+        });
+    });
+
+    it('should copy a directory to a new folder', function(done) {
+        reflectCopy.copy(multipleDir, resultDir, function(err, result) {
+            if(err) {
+                assert.ok(false, err.message);
+            }
+            fileExistsSync(path.join(resultDir, 'my-dir', 'loon.jpg'));
+            fileExistsSync(path.join(resultDir, 'my-dir', 'world-test.txt'));
+            done();
         });
     });
 });
