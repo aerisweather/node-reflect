@@ -12,9 +12,6 @@ function copy(source, destination, options, callback) {
     if (typeof options === 'function' && !callback) {
         callback = options;
         options = {}
-    } else if (typeof options === 'function' || options instanceof RegExp) {
-        //options = {filter: options}
-        callback(new Error('This form of copy does not support multiple files yet...'));
     }
     options = getCopyOptions(options);
     callback = callback || function () {
