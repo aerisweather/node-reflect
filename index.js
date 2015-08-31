@@ -28,6 +28,11 @@ function copy(source, destination, options, callback) {
             function (callback) {
                 //Look at the source, are we moving a file or a directory?
                 fsExtra.lstat(source, function (err, stats) {
+                    if(err) {
+                        var sourceNotFound = new Error("Source file doesn't exist");
+                        sourceNotFound.code = "EEXISTSRC";
+                        return callback(sourceNotFound);
+                    }
                     if (stats.isDirectory()) {
                         mode = MODE_DIRECTORY;
                         callback(null);
@@ -35,11 +40,6 @@ function copy(source, destination, options, callback) {
                     else if (stats.isFile()) {
                         mode = MODE_FILE;
                         callback(null);
-                    }
-                    else {
-                        var sourceNotFound = new Error("Source file doesn't exist");
-                        sourceNotFound.code = "EEXISTSRC"
-                        callback(new Error("Source file doesn't exist"))
                     }
                 });
             },

@@ -29,6 +29,18 @@ describe('copy', function() {
 		})
 	});
 
+    it('should not copy a non-existent file', function(done) {
+        fsExtra.ensureDirSync(resultDir);
+        reflectCopy.copy(path.join(fixturesDir, 'nope.jpg'), path.join(resultDir, 'nope.jpg'), function(err, result) {
+            if(err) {
+                assert.equal(err.code, 'EEXISTSRC');
+                return done();
+            }
+            assert.ok(false, "Didn't throw EEXISTSRC error when using a known hash.");
+            done();
+        })
+    });
+
     it('should copy the file using sha1 as a checksum', function(done) {
         fsExtra.ensureDirSync(resultDir);
         reflectCopy.copy(path.join(fixturesDir, 'loon.jpg'), path.join(resultDir, 'loon.jpg'), {hashMethod: 'sha1'}, function(err, result) {
